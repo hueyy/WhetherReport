@@ -1,0 +1,8 @@
+.lsp
+.clj-kondo
+.vscode
+.calva
+target
+.nrepl-port
+*.sqlite
+.lein-repl-history

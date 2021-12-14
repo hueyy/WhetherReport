@@ -1,0 +1,94 @@
+$primary-font: 'Fira Sans', sans-serif;
+$large-font-size: 1.6em;
+$normal-font-size: 1.3em;
+$small-font-size: 1em;
+$tiny-font-size: 0.8em;
+$text-color: #444;
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: white;
+  font-family: $primary-font;
+  font-weight: 400;
+  color: $text-color;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  ::selection {
+    background: #ccc;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+  text-align: center;
+
+  > .main {
+    padding: 2rem 1rem;
+    margin: 0 auto;
+    max-width: 1000px;
+    font-size: $normal-font-size;
+
+    > .period {
+      margin-bottom: 2rem;
+    }
+
+    > .stats {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+
+      > .stat {
+        margin-bottom: 2rem;
+        min-width: 300px;
+        max-width: 100%;
+
+        > p {
+          margin: 0;
+        }
+        > p:first-of-type {
+          font-size: $large-font-size;
+          font-weight: 900;
+        }
+
+        > p:nth-of-type(2) {
+          font-size: $small-font-size;
+        }
+      }
+    }
+
+    > .chart {
+      margin-top: 1rem;
+      height: 200vh;
+    }
+
+    > .description {
+      margin-top: 2rem;
+      text-align: left;
+      font-size: $small-font-size;
+    }
+
+    > footer {
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+      font-size: $tiny-font-size;
+    }
+
+    a {
+        color: $text-color;
+        text-decoration: underline dotted;
+
+        &:hover, &:active {
+          background-color: #fff2ac;
+        }
+      }
+  }
+}

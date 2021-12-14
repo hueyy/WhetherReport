@@ -25,10 +25,13 @@
        (map #(vector :link {:rel "stylesheet" :href (str "/" %)}))))
 
 (def prod-scripts
-  (->> (seq prod-assets)
-       (map #(->> % last :file (str "/")))
-       (filter #(s/ends-with? % ".js"))
-       (map #(vector :script {:type "module" :src %}))))
+  (conj
+   (->> (seq prod-assets)
+        (map #(->> % last :file (str "/")))
+        (filter #(s/ends-with? % ".js"))
+        (map #(vector :script {:type "module" :src %})))
+   [:script {:async true :src "//gc.zgo.at/count.js"
+             :data-goatcounter "https://whether-report.goatcounter.com/count"}]))
 
 (def fonts (list [:link {:rel "preconnect"
                          :href "https://fonts.googleapis.com"}]
@@ -69,7 +72,8 @@
         (make-json))))
 
 (defn index-page []
-  (h/html [:head
+  (h/html {:mode :html}
+          [:head
            [:meta {:charset "UTF-8"}]
            [:meta {:name "viewport"
                    :content "width=device-width, initial-scale=1.0"}]

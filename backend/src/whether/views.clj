@@ -35,7 +35,7 @@
 
 (def fonts (list [:link {:rel "preconnect"
                          :href "https://fonts.googleapis.com"}]
-                 [:link {:rel "preconnect"
+                 [:link {:rel "4preconnect"
                          :href "https://fonts.gstatic.com"}]
                  [:link {:rel "stylesheet"
                          :href "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;900&display=swap"}]))
@@ -48,8 +48,6 @@
          (assoc data :accuracy)
          (vector name))))
 
-; TODO: do as much as possible on backend
-; calculate accuracy for each region, etc.
 (defn generate-data []
   (let [forecasts (->> (db/select-nea-weather-forecasts)
                        (filter #(-> % :raw_data nea/is-valid-forecast?)))
@@ -78,6 +76,7 @@
            [:meta {:name "viewport"
                    :content "width=device-width, initial-scale=1.0"}]
            [:title "WhetherReport"]
+           fonts
            prod-styles]
           [:body
            [:div {:id "app"}]

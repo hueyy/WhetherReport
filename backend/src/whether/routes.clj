@@ -38,8 +38,8 @@
 (defroutes app-routes
   (GET "/" [] (v/index-page))
   (route/resources "/")
-  (context "/api" []
-    (GET "/" [] (json-response {:status "OK"}))
-    (GET "/mistakes" [type] (get-nea-mistakes type))
-    (GET "/rainfall-accuracy" [from to] (get-nea-rainfall-accuracy from to)))
+  ;; (context "/api" []
+  ;;   (GET "/" [] (json-response {:status "OK"}))
+  ;;   (GET "/mistakes" [type] (get-nea-mistakes type))
+  ;;   (GET "/rainfall-accuracy" [from to] (get-nea-rainfall-accuracy from to)))
   (route/not-found "Not Found"))

@@ -64,9 +64,9 @@ const App = () => {
           ) by comparing rainfall recorded by the National Environment Agency's weather stations against the 2-hour forecasts made by MSS for the same time period. Please note the following:</p>
         <ul>
           <li>Only MSS's 2-hour weather forecasts are currently being analysed</li>
-          <li>MSS's historical forecast data and NEA's historical weather conditions data is not fully comprehensive, and any missing or invalid data is ignored</li>
-          <li>Since MSS's forecasts do not necessarily cover the same location where  NEA's weather stations are located, data from the closest few stations are used. It is therefore possible, e.g. that rainfall predicted by MSS is not recorded by NEA's weather station.</li>
-          <li>Weather forecasts are assessed leniently, i.e. if there is any precipitation at all within the 2-hour period covered by a forecast, it is considered to be correct.</li>
+          <li>MSS's historical forecast data and NEA's historical weather conditions data are not fully comprehensive, and any missing or invalid data is ignored</li>
+          <li>Since MSS's forecasts do not necessarily cover the same location where  NEA's weather stations are located, data from the closest few stations are used. It is therefore possible, e.g. that rainfall predicted by MSS is not recorded by NEA's weather station</li>
+          <li>Weather forecasts are assessed leniently, i.e. if MSS forecasts rain in any form (e.g. Light Showers, Drizzle, Heavy Rain, Thundery Showers, etc.), and there is any precipitation at all within the 2-hour period covered by that forecast, it is considered to be correct (and vice-versa for non-rain forecasts, e.g. Windy, Fair, Cloudy, etc.)</li>
         </ul>
         <p>
           The data used is obtained from&nbsp;

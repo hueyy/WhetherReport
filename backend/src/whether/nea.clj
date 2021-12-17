@@ -247,21 +247,23 @@
       first
       :forecasts))
 
+(defn forecasts-rain? [forecast]
+  (case forecast
+    ("Windy" "Misty" "Mist" "Fair" "Fair (Day)" "Fog" "Fair (Night)" "Fair & Warm"
+             "Hazy" "Slightly Hazy" "Overcast" "Cloudy" "Partly Cloudy" "Partly Cloudy (Day)"
+             "Partly Cloudy (Night)" "Sunny" "Strong Winds" "Windy, Cloudy" "Windy, Fair") false
+    ("Light Rain" "Drizzle" "Light Showers" "Passing Showers" "Showers"
+                  "Heavy Thundery Showers with Gusty Winds" "Heavy Rain" "Heavy Showers"
+                  "Moderate Rain" "Strong Winds, Showers" "Strong Winds, Rain"
+                  "Thundery Showers" "Windy, Rain" "Windy, Showers"
+                  "Heavy Thundery Showers" "Snow" "Snow Showers") true))
+
 (defn within-expected-rainfall-for-forecast?
   "expects a forecast string, e.g. Cloudy and returns a number representing the expected rainfall"
   [forecast rainfall-value]
   (l/trace "Forecast:" forecast "Actual:" rainfall-value)
-  (case forecast
-    ("Windy" "Misty" "Mist" "Fair" "Fair (Day)" "Fog" "Fair (Night)" "Fair & Warm"
-             "Hazy" "Slightly Hazy" "Overcast" "Cloudy" "Partly Cloudy" "Partly Cloudy (Day)"
-             "Partly Cloudy (Night)" "Sunny" "Strong Winds" "Windy, Cloudy" "Windy, Fair") (= rainfall-value 0)
-    ("Light Rain" "Drizzle" "Light Showers" "Passing Showers") (> rainfall-value 0) ; (and (> rainfall-value 0) (< rainfall-value 0.5))
-    ("Showers" "Heavy Thundery Showers with Gusty Winds" "Heavy Rain" "Heavy Showers"
-               "Moderate Rain" "Strong Winds, Showers" "Strong Winds, Rain"
-               "Thundery Showers" "Windy, Rain" "Windy, Showers"
-               "Heavy Thundery Showers") (> rainfall-value 0)
-    ("Snow" "Snow Showers") true ; misc weather effects that are unlikely to be encountered
-    ))
+  (or (and (forecasts-rain? forecast) (> rainfall-value 0))
+      (and (not (forecasts-rain? forecast)) (= rainfall-value 0))))
 
 
 (defn get-nearest-stations

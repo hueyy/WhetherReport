@@ -5,7 +5,11 @@ export type Regions = {
 
 export interface Data {
   forecasts_count: number,
-  overall_accuracy: number,
+  accuracy: {
+    overall: number,
+    rain: number,
+    non_rain: number,
+  },
   mistakes_count: number,
   period: string
   regions: Regions,

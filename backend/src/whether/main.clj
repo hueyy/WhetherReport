@@ -6,7 +6,8 @@
             [whether.constants :as const]
             [whether.routes :as routes]
             [whether.cron :as whether-cron]
-            [whether.utils :refer [ignore-trailing-slash]])
+            [whether.utils :refer [ignore-trailing-slash]]
+            [whether.time :as t])
   (:gen-class))
 
 (def app
@@ -25,8 +26,8 @@
 (defn -main [& args]
   (if (seq args)
     (case (first args)
-      "--cron-forecasts" (whether-cron/update-nea-forecasts)
-      "--cron-readings" (whether-cron/update-nea-realtime-readings))
+      "--cron-30" (apply whether-cron/update-nea-db-for-period
+                         (t/get-last-30-days)))
     (do
       (println "Whether Report in "
                (if const/dev? "development" "production")

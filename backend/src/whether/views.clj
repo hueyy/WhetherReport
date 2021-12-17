@@ -48,6 +48,14 @@
          (assoc data :accuracy)
          (vector name))))
 
+(defn filter-rain [forecasts true?]
+  (->> forecasts
+       (map #(->> % :raw_data :items first :forecasts
+                  (filter (fn [f] (-> f :forecast nea/forecasts-rain? (= true?))))))
+       (apply concat)
+       (count)))
+
+
 (defn generate-data []
   (let [forecasts (->> (db/select-nea-weather-forecasts)
                        (filter #(-> % :raw_data nea/is-valid-forecast?)))
@@ -57,13 +65,23 @@
         mistakes (db/select-nea-rainfall-mistakes)
         mistakes-count (count mistakes)
         forecasts-count (* (count forecasts)
-                           (count nea/forecast-regions))]
+                           (count nea/forecast-regions))
+        rain-accuracy (- 1 (/ (->> mistakes ; i.e. forecast rain and no rain occurred
+                                   (filter #(-> % :actual_rainfall (= 0)))
+                                   (count))
+                              (filter-rain forecasts true)))
+        non-rain-accuracy (- 1 (/ (->> mistakes ; i.e. forecast no rain and rain occurred
+                                       (filter #(-> % :actual_rainfall (> 0)))
+                                       (count))
+                                  (filter-rain forecasts false)))]
     (-> {:forecasts_count forecasts-count
          :mistakes_count mistakes-count
          :period (str (-> forecasts-timestamps first t/format-as-day)
                       " - "
                       (-> forecasts-timestamps last t/format-as-day))
-         :overall_accuracy (- 1 (/ mistakes-count forecasts-count))
+         :accuracy {:overall (- 1 (/ mistakes-count forecasts-count))
+                    :rain rain-accuracy
+                    :non_rain non-rain-accuracy}
          :regions (->> (seq nea/forecast-regions)
                        (map #(add-accuracy-to-region % forecasts mistakes))
                        (reduce #(assoc %1 (first %2) (last %2)) {}))}

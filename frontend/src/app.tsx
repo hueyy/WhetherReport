@@ -14,7 +14,7 @@ const round = (n: number) => Math.round(n * 100) / 100
 
 const {
   forecasts_count: forecastsCount,
-  overall_accuracy: overallAccuracy,
+  accuracy,
   mistakes_count: mistakesCount,
   period,
   regions
@@ -42,8 +42,16 @@ const App = () => {
           <p>Incorrect Forecasts</p>
         </div>
         <div className="stat">
-          <p>{round(overallAccuracy * 100)}%</p>
+          <p>{round(accuracy.overall * 100)}%</p>
           <p>Overall Accuracy</p>
+        </div>
+        <div className="stat" title="how likely you are to cancel your plans because of a mistaken rain forecast">
+          <p>{round(accuracy.rain * 100)}%</p>
+          <p>Accuracy in predicting rain</p>
+        </div>
+        <div className="stat" title="how likely you are to be caught in the rain despite a sunny forecast">
+          <p>{round(accuracy.non_rain * 100)}%</p>
+          <p>Accuracy in predicting non-rain</p>
         </div>
         <div className="stat">
           <p>{round(regionArr[0][1].accuracy * 100)}%</p>

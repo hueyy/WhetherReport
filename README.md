@@ -39,3 +39,7 @@ docker run -p 8000:8000 whether
 ## Data
 
 This project uses data from [data.gov.sg](https://data.gov.sg) that was made available under the terms of the [Singapore Open Data Licence v1.0](https://data.gov.sg/open-data-licence).
+
+```bash
+lein trampoline run -m whether.main --cron-30
+```

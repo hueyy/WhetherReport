@@ -40,27 +40,14 @@ body {
       margin-bottom: 2rem;
     }
 
-    > .stats {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      flex-wrap: wrap;
-
-      > .stat {
-        margin-bottom: 2rem;
-        min-width: 300px;
-        max-width: 100%;
-
-        > p {
-          margin: 0;
-        }
-        > p:first-of-type {
-          font-size: $large-font-size;
-          font-weight: 900;
-        }
-
-        > p:nth-of-type(2) {
-          font-size: $small-font-size;
+    > .prose-container {
+      text-align: left;
+      > .prose {
+        > em {
+          text-emphasis: none;
+          font-weight: 600;
+          text-decoration: underline;
+          font-style: normal;
         }
       }
     }

@@ -111,7 +111,7 @@
     (sql/insert! db :nea_rainfall_mistakes {:area area
                                             :timestamp timestamp
                                             :forecast forecast
-                                            :actual_rainfall actual_rainfall})
+                                            :actual_rainfall (double actual_rainfall)})
     (catch Exception e (l/error e))))
 
 (defn select-nea-rainfall-mistakes

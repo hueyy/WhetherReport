@@ -38,7 +38,7 @@
                  [:link {:rel "4preconnect"
                          :href "https://fonts.gstatic.com"}]
                  [:link {:rel "stylesheet"
-                         :href "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;900&display=swap"}]))
+                         :href "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;900&display=swap"}]))
 
 (defn add-accuracy-to-region [[name data] forecasts mistakes]
   (let [forecasts-count (count forecasts)
@@ -77,7 +77,7 @@
     (-> {:forecasts_count forecasts-count
          :mistakes_count mistakes-count
          :period (str (-> forecasts-timestamps first t/format-as-day)
-                      " - "
+                      " – "
                       (-> forecasts-timestamps last t/format-as-day))
          :accuracy {:overall (- 1 (/ mistakes-count forecasts-count))
                     :rain rain-accuracy

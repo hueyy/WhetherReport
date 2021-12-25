@@ -102,5 +102,7 @@
 
 (defn format-as-day [timestamp]
   (let [t (ZonedDateTime/parse timestamp)]
-    (str (.getDayOfMonth t) " " (-> (.getMonth t)
-                                    (.getDisplayName TextStyle/SHORT Locale/UK)))))
+    (str (.getDayOfMonth t) " "
+         (-> (.getMonth t)
+             (.getDisplayName TextStyle/SHORT Locale/UK)) " "
+         (.getYear t))))

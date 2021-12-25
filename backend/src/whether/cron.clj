@@ -88,7 +88,7 @@
   ([timestamp]
    (let [in-db? (-> (db/select-nea-weather-forecasts timestamp)
                     :raw_data
-                    nil? not)]
+                    nil?)]
      (if in-db?
        (let [result (nea/get-2h-forecast timestamp)]
          (if (nil? result)
@@ -105,9 +105,10 @@
    (update-nea-rainfall-readings timestamp)))
 
 (defn update-nea-realtime-readings-for-period [from-date to-date]
-  (doseq [timestamp (t/get-5-min-range from-date to-date)]
-    (l/debug "updating NEA realtime readings for timestamp" timestamp)
-    (update-nea-realtime-readings timestamp)))
+  (doall (pmap (fn [timestamp]
+                 (l/debug "updating NEA realtime readings for timestamp" timestamp)
+                 (update-nea-realtime-readings timestamp))
+               (t/get-5-min-range from-date to-date))))
 
 ;; (defn update-nea-db-for-timestamp [timestamp]
 ;;   ; to be run 'live'
@@ -118,11 +119,17 @@
   ; to be run only for historical periods
   (l/debug "updating NEA DB for period" from-date to-date)
   (l/debug "updating NEA forecasts")
-  (doseq [timestamp (t/get-30-min-range from-date to-date)]
-    (l/debug "updating NEA forecasts for timestamp" timestamp)
-    (update-nea-forecasts timestamp))
+  (doall (pmap
+          (fn [timestamp]
+            (l/debug "updating NEA forecasts for timestamp" timestamp)
+            (update-nea-forecasts timestamp))
+          (t/get-30-min-range from-date to-date)))
   (l/debug "updating NEA realtime readings")
   (update-nea-realtime-readings-for-period from-date to-date)
   (l/debug "checking for NEA mistakes")
   (doseq [timestamp (t/get-30-min-range from-date to-date)]
-    (check-for-nea-mistakes timestamp)))
+    (check-for-nea-mistakes timestamp))
+  ;; (doall (pmap
+  ;;         (fn [timestamp] (check-for-nea-mistakes timestamp))
+  ;;         (t/get-30-min-range from-date to-date)))
+  )

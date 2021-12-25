@@ -24,52 +24,37 @@ const regionArr = Object.entries(regions).sort(
   ([_1, n1], [_2, n2]) => (n1.accuracy - n2.accuracy)
 )
 
+const formatNumber = (n: number) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
 const App = () => {
   return (
     <>
     <div className="main">
       <h1>WhetherReport</h1>
-      <p className="period">
-        {period}
-      </p>
-      <div className="stats">
-        <div className="stat">
-          <p>{forecastsCount}</p>
-          <p>Total Forecasts</p>
-        </div>
-        <div className="stat">
-          <p>{mistakesCount}</p>
-          <p>Incorrect Forecasts</p>
-        </div>
-        <div className="stat">
-          <p>{round(accuracy.overall * 100)}%</p>
-          <p>Overall Accuracy</p>
-        </div>
-        <div className="stat" title="how likely you are to cancel your plans because of a mistaken rain forecast">
-          <p>{round(accuracy.rain * 100)}%</p>
-          <p>Accuracy in predicting rain</p>
-        </div>
-        <div className="stat" title="how likely you are to be caught in the rain despite a sunny forecast">
-          <p>{round(accuracy.non_rain * 100)}%</p>
-          <p>Accuracy in predicting non-rain</p>
-        </div>
-        <div className="stat">
-          <p>{round(regionArr[0][1].accuracy * 100)}%</p>
-          <p>{regionArr[0][0]} (Lowest)</p>
-        </div>
-        <div className="stat">
-          <p>{round(regionArr[regionArr.length - 1][1].accuracy * 100)}%</p>
-          <p>{regionArr[regionArr.length - 1][0]} (Highest)</p>
-        </div>
+
+      <div className="prose-container">
+        <p className="prose">
+          Between <em>{period}</em>, <a href="http://www.weather.gov.sg/weather-forecast-2hrnowcast-2/">Meteorological Service Singapore (MSS)</a> made a total of <em>{formatNumber(forecastsCount)}</em> 2-hour weather forecasts. <em>{formatNumber(mistakesCount)}</em> of them turned out to be incorrect, resulting in an overall accuracy rate of <em>{round(accuracy.overall * 100)}%</em>.
+        </p>
+
+        <p className="prose">
+          The 2-hour forecasts were most accurate in relation to <em>{regionArr[regionArr.length - 1][0]} ({round(regionArr[regionArr.length - 1][1].accuracy * 100)}%)</em> and least accurate in relation to <em>{regionArr[0][0]} ({round(regionArr[0][1].accuracy * 100)}%)</em>.
+        </p>
+
+        <p className="prose">
+          It seems that the 2-hour forecasts may be more accurate generally when they predict non-rainy weather. MSS correctly predicted that there would be non-rainy weather <em>{round(accuracy.non_rain * 100)}%</em> of the time. However, where MSS predicted there would be rainy weather, it only actually rained <em>{round(accuracy.rain * 100)}%</em> of the time.
+        </p>
       </div>
+
       <div className="chart">
         <RegionsChart regions={regions} />
       </div>
       <div className="description">
-        <p>This project tracks the accuracy of the&nbsp;
-          <a href="http://www.weather.gov.sg/weather-forecast-2hrnowcast-2/">Meteorological Service Singapore (MSS)'s weather forecasts</a> (also available on&nbsp;
+        <p>
+          This project tracks the accuracy of MSS' 2-hour weather forecasts (also available on&nbsp;
           <a href="https://va.ecitizen.gov.sg/CFP/CustomerPages/NEA_google/displayresult.aspx?MesId=3725718&Source=Google&url=va.ecitizen.gov.sg">NEA's myENV mobile app</a>
-          ) by comparing rainfall recorded by the National Environment Agency's weather stations against the 2-hour forecasts made by MSS for the same time period. Please note the following:</p>
+          ) by comparing rainfall recorded by the National Environment Agency's weather stations against the 2-hour forecasts made by MSS for the same time period. Please note the following:
+        </p>
         <ul>
           <li>Only MSS's 2-hour weather forecasts are currently being analysed</li>
           <li>MSS's historical forecast data and NEA's historical weather conditions data are not fully comprehensive, and any missing or invalid data is ignored</li>

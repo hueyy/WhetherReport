@@ -265,7 +265,6 @@
   (or (and (forecasts-rain? forecast) (> rainfall-value 0))
       (and (not (forecasts-rain? forecast)) (= rainfall-value 0))))
 
-
 (defn get-nearest-stations
   "takes map of temperature/rainfall stations and region string,
    returns closest stations to the region"

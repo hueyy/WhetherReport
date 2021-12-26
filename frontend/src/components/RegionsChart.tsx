@@ -9,7 +9,7 @@ interface Props {
 }
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
-ChartJS.defaults.font.size = 20
+ChartJS.defaults.font.size = 14
 ChartJS.defaults.font.family = `'Fira Sans', sans-serif`
 
 const options = {
@@ -25,6 +25,9 @@ const options = {
     title: {
       display: true,
       text: 'Accuracy by week',
+      font: {
+        size: 20,
+      },
     },
     tooltip: {
       callbacks: {
@@ -32,7 +35,7 @@ const options = {
           return ` ${ctx.dataset.label}: ${ctx.parsed.x}%`
         }
       }
-    }
+    },
   },
 }
 

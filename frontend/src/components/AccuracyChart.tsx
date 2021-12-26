@@ -18,7 +18,7 @@ ChartJS.register(
   Title,
   Tooltip,
 )
-ChartJS.defaults.font.size = 20
+ChartJS.defaults.font.size = 12
 ChartJS.defaults.font.family = `'Fira Sans', sans-serif`
 
 interface Props {
@@ -31,7 +31,10 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: `Accuracy across time`
+      text: `Accuracy across time`,
+      font: {
+        size: 20,
+      },
     },
     tooltip: {
       callbacks: {

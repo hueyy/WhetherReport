@@ -41,7 +41,7 @@
   (assoc result :raw_data (from-json raw-data)))
 
 (defn select-nea-weather-forecasts
-  ([] (->> (sql/query db ["SELECT * FROM `nea_weather_forecasts` WHERE 1"])
+  ([] (->> (sql/query db ["SELECT * FROM `nea_weather_forecasts` WHERE 1 ORDER BY `valid_from`"])
            (map parse-raw-data)))
   ([valid-from] (try
                   (-> (sql/get-by-id db :nea_weather_forecasts valid-from :valid_from {})
@@ -49,7 +49,7 @@
                   (catch Exception e (l/error e)))))
 
 (defn select-nea-temperature-readings
-  ([] (->> (sql/query db ["SELECT * FROM `nea_temperature_readings` WHERE 1"])
+  ([] (->> (sql/query db ["SELECT * FROM `nea_temperature_readings` WHERE 1 ORDER BY `timestamp`"])
            (map parse-raw-data)))
   ([timestamp] (try
                  (-> (sql/get-by-id db :nea_temperature_readings timestamp :timestamp {})
@@ -57,13 +57,13 @@
                  (catch Exception e (l/error e)))))
 
 (defn select-nea-rainfall-readings
-  ([] (->> (sql/query db ["SELECT * FROM `nea_rainfall_readings` WHERE 1"])
+  ([] (->> (sql/query db ["SELECT * FROM `nea_rainfall_readings` WHERE 1 ORDER BY `timestamp`"])
            (map parse-raw-data)))
   ([timestamp] (if (seq? timestamp)
                  (try
                    (let [sql-array (str/join "," (-> (count timestamp)
                                                      (repeat "?")))
-                         query (into [(str "SELECT * FROM `nea_rainfall_readings` WHERE `timestamp` IN (" sql-array ")")]
+                         query (into [(str "SELECT * FROM `nea_rainfall_readings` WHERE `timestamp` IN (" sql-array ") ORDER BY `timestamp`")]
                                      timestamp)]
                      (->> (sql/query db query)
                           (map parse-raw-data)))
@@ -117,12 +117,12 @@
 (defn select-nea-rainfall-mistakes
   ([] (l/trace "Selecting NEA rainfall mistakes")
       (try
-        (sql/query db ["SELECT * FROM `nea_rainfall_mistakes` WHERE 1"])
+        (sql/query db ["SELECT * FROM `nea_rainfall_mistakes` WHERE 1 ORDER BY `timestamp`"])
         (catch Exception e (l/error e))))
   ([timestamps] (if (seq? timestamps)
                   (try
                     (let [sql-array (str/join "," (repeat (count timestamps) "?"))
-                          query (into [(str "SELECT * FROM `nea_rainfall_mistakes` WHERE `timestamp` IN (" sql-array) ")"] timestamps)]
+                          query (into [(str "SELECT * FROM `nea_rainfall_mistakes` WHERE `timestamp` IN (" sql-array) ") ORDER BY `timestamp`"] timestamps)]
                       (sql/query db query))
                     (catch Exception e (l/error e)))
                   (select-nea-rainfall-mistakes (repeat 1 timestamps)))))

@@ -2,7 +2,7 @@
   (:require [whether.log :as l])
   (:import [java.time ZonedDateTime]
            [java.time.format DateTimeFormatterBuilder]
-           [java.time.temporal ChronoUnit]
+           [java.time.temporal ChronoUnit ChronoField]
            [java.util Locale]
            [java.time.format TextStyle])
   (:gen-class))
@@ -106,3 +106,14 @@
          (-> (.getMonth t)
              (.getDisplayName TextStyle/SHORT Locale/UK)) " "
          (.getYear t))))
+
+(defn get-week
+  "Truncate timestamp to beginning of week"
+  [timestamp]
+  (let [now (if (string? timestamp)
+              (ZonedDateTime/parse timestamp) timestamp)
+        monday 1]
+    (-> now
+        (.with ChronoField/DAY_OF_WEEK monday)
+        (.truncatedTo ChronoUnit/DAYS)
+        (format-as-iso8601))))

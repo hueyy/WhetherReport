@@ -55,6 +55,20 @@
        (apply concat)
        (count)))
 
+(defn group-by-week [forecasts time-field]
+  (group-by (fn [forecast]
+              (-> forecast time-field t/get-week))
+            forecasts))
+
+(defn calculate-weekly-accuracy [forecasts mistakes]
+  (let [f-weeks (group-by-week forecasts :valid_from)
+        m-weeks (group-by-week mistakes :timestamp)]
+    (->> (seq f-weeks)
+         (map (fn [[t f]]
+                (let [m (get m-weeks t)]
+                  (list t (- 1 (/ (count m)
+                                  (* (count f) (count nea/forecast-regions))))))))
+         (sort-by #(first %)))))
 
 (defn generate-data []
   (let [forecasts (->> (db/select-nea-weather-forecasts)
@@ -73,7 +87,8 @@
         non-rain-accuracy (- 1 (/ (->> mistakes ; i.e. forecast no rain and rain occurred
                                        (filter #(-> % :actual_rainfall (> 0)))
                                        (count))
-                                  (filter-rain forecasts false)))]
+                                  (filter-rain forecasts false)))
+        weekly-accuracy (calculate-weekly-accuracy forecasts mistakes)]
     (-> {:forecasts_count forecasts-count
          :mistakes_count mistakes-count
          :period (str (-> forecasts-timestamps first t/format-as-day)
@@ -84,7 +99,8 @@
                     :non_rain non-rain-accuracy}
          :regions (->> (seq nea/forecast-regions)
                        (map #(add-accuracy-to-region % forecasts mistakes))
-                       (reduce #(assoc %1 (first %2) (last %2)) {}))}
+                       (reduce #(assoc %1 (first %2) (last %2)) {}))
+         :weekly_accuracy weekly-accuracy}
         (make-json))))
 
 (defn index-page []

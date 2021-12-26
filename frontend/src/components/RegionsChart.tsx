@@ -24,8 +24,15 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: 'Accuracy by region',
+      text: 'Accuracy by week',
     },
+    tooltip: {
+      callbacks: {
+        label: (ctx: any) => {
+          return ` ${ctx.dataset.label}: ${ctx.parsed.x}%`
+        }
+      }
+    }
   },
 }
 
@@ -66,14 +73,14 @@ const RegionsChart = ({ regions }: Props) => {
       data: accuracyData,
       borderColor: 'rgb(20, 20, 20)',
       backgroundColor: calculateColour(accuracyData.map((v) => Number.parseFloat(v))),
-    }
+    },
   ]
   const chartData = {
     labels,
     datasets,
   }
 
-  return <Bar options ={options} data={chartData} />
+  return <Bar options={options} data={chartData} />
 }
 
 export default RegionsChart

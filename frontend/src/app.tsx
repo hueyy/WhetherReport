@@ -1,5 +1,6 @@
 import type { Data, Region } from './types'
 import RegionsChart from './components/RegionsChart'
+import AccuracyChart from './components/AccuracyChart'
 
 declare const data: Data
 
@@ -17,7 +18,8 @@ const {
   accuracy,
   mistakes_count: mistakesCount,
   period,
-  regions
+  regions,
+  weekly_accuracy: weeklyAccuracy
 } = data
 
 const regionArr = Object.entries(regions).sort(
@@ -42,16 +44,21 @@ const App = () => {
         </p>
 
         <p className="prose">
-          It seems that the 2-hour forecasts may be more accurate generally when they predict non-rainy weather. MSS correctly predicted that there would be non-rainy weather <em>{round(accuracy.non_rain * 100)}%</em> of the time. However, where MSS predicted there would be rainy weather, it only actually rained <em>{round(accuracy.rain * 100)}%</em> of the time.
+          It seems that the 2-hour forecasts may be more accurate generally where they predict non-rainy weather. MSS correctly predicted that there would be non-rainy weather <em>{round(accuracy.non_rain * 100)}%</em> of the time. However, where MSS predicted there would be rainy weather, it only actually rained <em>{round(accuracy.rain * 100)}%</em> of the time.
         </p>
       </div>
 
-      <div className="chart">
+      <div className="accuracy-chart">
+        <AccuracyChart weeklyAccuracy={weeklyAccuracy} />
+      </div>
+
+      <div className="regions-chart">
         <RegionsChart regions={regions} />
       </div>
+      
       <div className="description">
         <p>
-          This project tracks the accuracy of MSS' 2-hour weather forecasts (also available on&nbsp;
+          This project tracks the accuracy of the 2-hour weather forecasts made by MSS (also available on&nbsp;
           <a href="https://va.ecitizen.gov.sg/CFP/CustomerPages/NEA_google/displayresult.aspx?MesId=3725718&Source=Google&url=va.ecitizen.gov.sg">NEA's myENV mobile app</a>
           ) by comparing rainfall recorded by the National Environment Agency's weather stations against the 2-hour forecasts made by MSS for the same time period. Please note the following:
         </p>

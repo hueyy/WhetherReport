@@ -52,7 +52,12 @@ body {
       }
     }
 
-    > .chart {
+    > .accuracy-chart {
+      margin-top: 1rem;
+      height: 50vh;
+    }
+
+    > .regions-chart {
       margin-top: 1rem;
       height: 200vh;
     }

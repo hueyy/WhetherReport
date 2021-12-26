@@ -1,7 +1,5 @@
 # Whether Report
 
-> Tells you whether the weather forecast was right or not
-
 This project tracks the accuracy of the [Meteorological Service Singapore](http://www.weather.gov.sg/weather-forecast-2hrnowcast-2/) (MSS)'s weather forecasts (also available on [NEA's myENV mobile app](https://va.ecitizen.gov.sg/CFP/CustomerPages/NEA_google/displayresult.aspx?MesId=3725718&Source=Google&url=va.ecitizen.gov.sg)) by comparing rainfall recorded by the National Environment Agency (NEA)'s weather stations against the 2-hour forecasts made by MSS for the same time period.
 
 ## Limitations

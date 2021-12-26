@@ -24,7 +24,7 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: 'Accuracy by week',
+      text: 'Accuracy by region',
       font: {
         size: 20,
       },

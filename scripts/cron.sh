@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -jar whether.jar --cron-2
+java -jar /app/whether.jar --cron-2

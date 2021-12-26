@@ -21,10 +21,11 @@ RUN apk update && apk --no-cache upgrade && \
   apk add --no-cache --update s6 tzdata && rm -rf /var/cache/apk/*
 WORKDIR /app
 
-# COPY ./scripts/cron.sh /etc/periodic/30min/
+COPY ./scripts/cron.sh /app/cron.sh
 COPY ./scripts/start.sh /app/start.sh
-RUN chmod 744 /app/start.sh
-# && chmod 744 /etc/periodic/30min/cron.sh
+COPY /scripts/crontabs /etc/crontabs/root
+RUN chmod 744 /app/start.sh && \
+    chmod 744 /app/cron.sh
 COPY --from=frontend /app/dist /app/resources/public
 COPY --from=build /app/target/whether-0.1.0-standalone.jar /app/whether.jar
 

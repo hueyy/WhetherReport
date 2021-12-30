@@ -44,7 +44,10 @@ const App = () => {
         </p>
 
         <p className="prose">
-          It seems that the 2-hour forecasts may be more accurate generally where they predict non-rainy weather. MSS correctly predicted that there would be non-rainy weather <em>{round(accuracy.non_rain * 100)}%</em> of the time. However, where MSS predicted there would be rainy weather, it only actually rained <em>{round(accuracy.rain * 100)}%</em> of the time.
+          It seems that MSS may have&nbsp;
+          <a href="https://en.wikipedia.org/wiki/Wet_bias">'wet bias'</a>, i.e. the 2-hour forecasts may be more accurate generally where they predict non-rainy weather.
+          MSS's predictions that the weather would be non-rainy are accurate <em>{round(accuracy.non_rain * 100)}%</em> of the time.
+          However, where MSS predicted there would be rainy weather, it only actually rained <em>{round(accuracy.rain * 100)}%</em> of the time.
         </p>
       </div>
 

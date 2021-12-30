@@ -1,5 +1,5 @@
 (ns whether.routes
-  (:require [compojure.core :refer [defroutes GET context]]
+  (:require [compojure.core :refer [defroutes GET]]
             [compojure.route :as route]
             [whether.db :as db]
             [whether.log :as l]

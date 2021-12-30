@@ -1,5 +1,6 @@
 (ns whether.views
-  (:require [clojure.string :as s]
+  (:require [clojure.core.memoize :as memo]
+            [clojure.string :as s]
             [hiccup.core :as h]
             [whether.constants :as const]
             [whether.utils :refer [from-json make-json]]
@@ -103,19 +104,20 @@
          :weekly_accuracy weekly-accuracy}
         (make-json))))
 
-(defn index-page []
-  (h/html {:mode :html}
-          [:head
-           [:meta {:charset "UTF-8"}]
-           [:meta {:name "viewport"
-                   :content "width=device-width, initial-scale=1.0"}]
-           [:title "WhetherReport"]
-           fonts
-           prod-styles]
-          [:body
-           [:div {:id "app"}]
-           (if const/dev?
-             dev-index-scripts
-             prod-scripts)
-           [:script {:type "text/javascript"}
-            (str "const data = " (generate-data) ";")]]))
+(def index-page (memo/ttl (fn []
+                            (h/html {:mode :html}
+                                    [:head
+                                     [:meta {:charset "UTF-8"}]
+                                     [:meta {:name "viewport"
+                                             :content "width=device-width, initial-scale=1.0"}]
+                                     [:title "WhetherReport"]
+                                     fonts
+                                     prod-styles]
+                                    [:body
+                                     [:div {:id "app"}]
+                                     (if const/dev?
+                                       dev-index-scripts
+                                       prod-scripts)
+                                     [:script {:type "text/javascript"}
+                                      (str "const data = " (generate-data) ";")]]))
+                          :ttl/threshold (* 60 60 4)))

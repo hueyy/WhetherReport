@@ -29,7 +29,8 @@
       "--cron-30" (apply whether-cron/update-nea-db-for-period
                          (t/get-last-30-days))
       "--cron-2" (apply whether-cron/update-nea-db-for-period
-                        (t/get-last-n-days 2)))
+                        (t/get-last-n-days 2))
+      "--cron-x" (whether-cron/update-nea-db-for-period (nth args 1) (nth args 2)))
     (do
       (println "Whether Report in "
                (if const/dev? "development" "production")

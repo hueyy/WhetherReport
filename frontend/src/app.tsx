@@ -19,7 +19,15 @@ const {
   mistakes_count: mistakesCount,
   period,
   regions,
-  weekly_accuracy: weeklyAccuracy
+  weekly_accuracy: weeklyAccuracy,
+  rainfall_incidence: rainfallIncidence,
+  forecasts_rain_count: forecastsRainCount,
+  confusion_matrix: [
+    rain_rain,
+    rain_non_rain,
+    non_rain_rain,
+    non_rain_non_rain,
+  ]
 } = data
 
 const regionArr = Object.entries(regions).sort(
@@ -45,10 +53,42 @@ const App = () => {
 
         <p className="prose">
           It seems that MSS may have&nbsp;
-          <a href="https://en.wikipedia.org/wiki/Wet_bias">'wet bias'</a>, i.e. the 2-hour forecasts may be more accurate generally where they predict non-rainy weather.
-          MSS's predictions that the weather would be non-rainy are accurate <em>{round(accuracy.non_rain * 100)}%</em> of the time.
+          <a href="https://en.wikipedia.org/wiki/Wet_bias">'wet bias'</a>, i.e. a bias towards predicting rainy weather.
+        </p>
+
+        <p className="prose">
+          It appears that MSS tends to predict rainy weather significantly more often than rainy weather actually occurs — it rained about <em>{round(rainfallIncidence * 100)}%</em> of the time in any given region, whereas <em>{round(forecastsRainCount * 100)}%</em> of MSS's forecasts predicted rainy weather.
+        </p>
+        <p className="prose">
+          This has affected the accuracy of MSS's predictions. Its predictions that the weather would be non-rainy are accurate <em>{round(accuracy.non_rain * 100)}%</em> of the time.
           However, where MSS predicted there would be rainy weather, it only actually rained <em>{round(accuracy.rain * 100)}%</em> of the time.
         </p>
+
+        <table className="confusion-matrix">
+          <tbody>
+            <tr>
+              <td rowSpan={2}></td>
+              <td></td>
+              <td colSpan={2}>Predicted</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Rainy</td>
+              <td>Not Rainy</td>
+            </tr>
+            <tr>
+              <td rowSpan={2}>Actual</td>
+              <td>Rainy</td>
+              <td>{formatNumber(rain_rain)}</td>
+              <td>{formatNumber(rain_non_rain)}</td>
+            </tr>
+            <tr>
+              <td>Not Rainy</td>
+              <td>{formatNumber(non_rain_rain)}</td>
+              <td>{formatNumber(non_rain_non_rain)}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div className="accuracy-chart">

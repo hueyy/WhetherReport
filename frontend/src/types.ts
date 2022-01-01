@@ -16,4 +16,7 @@ export interface Data {
   period: string
   regions: Regions,
   weekly_accuracy: WeeklyAccuracy
+  rainfall_incidence: number,
+  forecasts_rain_count: number,
+  confusion_matrix: number[],
 }

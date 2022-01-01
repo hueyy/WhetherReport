@@ -50,6 +50,31 @@ body {
           font-style: normal;
         }
       }
+
+      > table.confusion-matrix {
+        border-collapse: collapse;
+        margin: 0 auto;
+
+        td {
+          border: 1px solid #ccc;
+          padding: 0.6rem 1rem;
+        }
+        tr:nth-of-type(3) > td:first-of-type {
+          writing-mode: vertical-rl;
+          transform: rotate(180deg);
+        }
+        tr:first-of-type > td:nth-of-type(3),
+        tr:nth-of-type(3) > td:first-of-type, {
+          text-align: center;
+        }
+
+        tr:first-of-type > td:first-of-type,
+        tr:first-of-type > td:nth-of-type(2),
+        tr:nth-of-type(2) > td:first-of-type, {
+          border: none;
+        }
+        
+      }
     }
 
     > .accuracy-chart {

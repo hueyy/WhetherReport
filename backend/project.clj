@@ -25,6 +25,7 @@
                  :port 8888}
          :auto-reload true}
   :main whether.main
+  :jvm-opts ["-Xmx4G"]
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.2"]]}

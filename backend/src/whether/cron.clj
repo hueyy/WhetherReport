@@ -49,19 +49,21 @@
      (if (nil? forecast)
        (l/trace "no forecast for" timestamp)
        (doseq [area-forecast (nea/get-area-forecasts-from-2h-forecast forecast)]
-         (let [area (:area area-forecast)
-               rainfall-value (get-rainfall-by-area rainfall-readings area)
-               forecast-text (:forecast area-forecast)]
-           (if (nil? rainfall-value)
-             (l/trace "Missing station reading for" area)
-             (do
-               (l/trace area rainfall-value)
-               (if (nea/within-expected-rainfall-for-forecast? forecast-text rainfall-value)
-                 nil
-                 (db/insert-nea-rainfall-mistakes {:area area
-                                                   :forecast forecast-text
-                                                   :timestamp timestamp
-                                                   :actual_rainfall rainfall-value}))))))))))
+         (if (not (nil? area-forecast))
+           (let [area (:area area-forecast)
+                 rainfall-value (get-rainfall-by-area rainfall-readings area)
+                 forecast-text (:forecast area-forecast)]
+             (if (nil? rainfall-value)
+               (l/trace "Missing station reading for" area)
+               (do
+                 (l/trace area rainfall-value)
+                 (if (nea/within-expected-rainfall-for-forecast? forecast-text rainfall-value)
+                   nil
+                   (db/insert-nea-rainfall-mistakes {:area area
+                                                     :forecast forecast-text
+                                                     :timestamp timestamp
+                                                     :actual_rainfall rainfall-value})))))
+           (l/trace "NEA returned invalid data, ignoring")))))))
 
 (defn check-for-nea-mistakes
   ([timestamp] (check-for-nea-rainfall-mistakes timestamp)))

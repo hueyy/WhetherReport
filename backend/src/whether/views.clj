@@ -3,7 +3,7 @@
             [clojure.string :as s]
             [hiccup.core :as h]
             [whether.constants :as const]
-            [whether.utils :refer [from-json make-json]]
+            [whether.utils :refer [from-json make-json average]]
             [whether.time :as t]
             [whether.db :as db]
             [whether.nea :as nea]))
@@ -71,6 +71,21 @@
                                   (* (count f) (count nea/forecast-regions))))))))
          (sort-by #(first %)))))
 
+(defn calculate-rainfall-incidence []
+  (/ (apply + (->> (db/select-nea-rainfall-readings)
+                   (map #(->> % :raw_data :items first :readings))
+                   (map #(count (filter (fn [r] (-> r :value (> 0))) %)))))
+     (count nea/forecast-regions)
+     (count (db/select-nea-rainfall-readings))))
+
+(defn calculate-forecasts-rain-count [forecasts]
+  (/ (apply + (->> forecasts
+                   (map #(->> % :raw_data :items first :forecasts
+                              (filter (fn [f] (-> f :forecast nea/forecasts-rain?)))
+                              (count)))))
+     (count nea/forecast-regions)
+     (count forecasts)))
+
 (defn generate-data []
   (let [forecasts (->> (db/select-nea-weather-forecasts)
                        (filter #(-> % :raw_data nea/is-valid-forecast?)))
@@ -81,13 +96,15 @@
         mistakes-count (count mistakes)
         forecasts-count (* (count forecasts)
                            (count nea/forecast-regions))
-        rain-accuracy (- 1 (/ (->> mistakes ; i.e. forecast rain and no rain occurred
-                                   (filter #(-> % :actual_rainfall (= 0)))
-                                   (count))
+        mistakes-rain-count (->> mistakes ; i.e. forecast rain and no rain occurred
+                                 (filter #(-> % :actual_rainfall (= 0)))
+                                 (count))
+        mistakes-no-rain-count (->> mistakes ; i.e. forecast no rain and rain occurred
+                                    (filter #(-> % :actual_rainfall (> 0)))
+                                    (count))
+        rain-accuracy (- 1 (/ mistakes-rain-count
                               (filter-rain forecasts true)))
-        non-rain-accuracy (- 1 (/ (->> mistakes ; i.e. forecast no rain and rain occurred
-                                       (filter #(-> % :actual_rainfall (> 0)))
-                                       (count))
+        non-rain-accuracy (- 1 (/ mistakes-no-rain-count
                                   (filter-rain forecasts false)))
         weekly-accuracy (calculate-weekly-accuracy forecasts mistakes)]
     (-> {:forecasts_count forecasts-count
@@ -101,7 +118,13 @@
          :regions (->> (seq nea/forecast-regions)
                        (map #(add-accuracy-to-region % forecasts mistakes))
                        (reduce #(assoc %1 (first %2) (last %2)) {}))
-         :weekly_accuracy weekly-accuracy}
+         :weekly_accuracy weekly-accuracy
+         :confusion_matrix [(- forecasts-count mistakes-rain-count)
+                            mistakes-rain-count
+                            mistakes-no-rain-count
+                            (- forecasts-count mistakes-no-rain-count)]
+         :forecasts_rain_count (calculate-forecasts-rain-count forecasts)
+         :rainfall_incidence (calculate-rainfall-incidence)}
         (make-json))))
 
 (def index-page (memo/ttl (fn []

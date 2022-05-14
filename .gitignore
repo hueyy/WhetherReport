@@ -6,3 +6,6 @@ target
 .nrepl-port
 *.sqlite
 .lein-repl-history
+dist/
+# Local Netlify folder
+.netlify

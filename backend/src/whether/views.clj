@@ -1,12 +1,19 @@
 (ns whether.views
-  (:require [clojure.core.memoize :as memo]
+  (:require [clojure.java.shell :refer [sh]]
             [clojure.string :as s]
-            [hiccup.core :as h]
+            [hiccup.page :refer [html5]]
             [whether.constants :as const]
-            [whether.utils :refer [from-json make-json average]]
+            [whether.utils :refer [from-json make-json]]
             [whether.time :as t]
             [whether.db :as db]
-            [whether.nea :as nea]))
+            [whether.nea :as nea])
+  (:gen-class))
+
+(def index-path "dist/index.html")
+
+(defn copy-prod-assets []
+  (sh "npm" "run" "build" :dir "../frontend")
+  (sh "cp" "-r" "../frontend/dist" "."))
 
 (def dev-index-scripts
   (list [:script {:type "module"
@@ -127,20 +134,24 @@
          :rainfall_incidence (calculate-rainfall-incidence)}
         (make-json))))
 
-(def index-page (memo/ttl (fn []
-                            (h/html {:mode :html}
-                                    [:head
-                                     [:meta {:charset "UTF-8"}]
-                                     [:meta {:name "viewport"
-                                             :content "width=device-width, initial-scale=1.0"}]
-                                     [:title "WhetherReport"]
-                                     fonts
-                                     prod-styles]
-                                    [:body
-                                     [:div {:id "app"}]
-                                     (if const/dev?
-                                       dev-index-scripts
-                                       prod-scripts)
-                                     [:script {:type "text/javascript"}
-                                      (str "const data = " (generate-data) ";")]]))
-                          :ttl/threshold (* 60 60 4)))
+;TODO: additional accuracies in chart
+(defn index-page []
+  (html5 {:mode :html}
+         [:head
+          [:meta {:charset "UTF-8"}]
+          [:meta {:name "viewport"
+                  :content "width=device-width, initial-scale=1.0"}]
+          [:title "WhetherReport"]
+          fonts
+          prod-styles]
+         [:body
+          [:div {:id "app"}]
+          (if const/dev?
+            dev-index-scripts
+            prod-scripts)
+          [:script {:type "text/javascript"}
+           (str "const data = " (generate-data) ";")]]))
+
+(defn generate-static-assets []
+  (copy-prod-assets)
+  (spit index-path (index-page)))

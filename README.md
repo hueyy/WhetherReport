@@ -17,7 +17,7 @@ Run the backend:
 
 ```bash
 cd backend
-lein ring server
+lein run
 ```
 
 Then run the frontend:
@@ -32,6 +32,14 @@ In Docker:
 ```bash
 docker build . -t whether
 docker run -p 8000:8000 whether
+```
+
+# Production
+
+```bash
+export IS_PRODUCTION=true
+lein trampoline run -m whether.main --build
+netlify deploy --prod
 ```
 
 ## Data

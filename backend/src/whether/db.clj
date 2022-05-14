@@ -32,7 +32,9 @@
     (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_temperature_readings` (`raw_data` TEXT NOT NULL, `timestamp` TEXT PRIMARY KEY NOT NULL)"])
     (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_readings` (`raw_data` TEXT NOT NULL, `timestamp` TEXT PRIMARY KEY NOT NULL)"])
     ; generated data
-    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_mistakes` (`area` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `forecast` TEXT NOT NULL, `actual_rainfall` INTEGER NOT NULL, PRIMARY KEY (`area`, `timestamp`))"])))
+    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_mistakes` (`area` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `forecast` TEXT NOT NULL, `actual_rainfall` INTEGER NOT NULL, PRIMARY KEY (`area`, `timestamp`))"])
+    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_weather_forecasts_data` (`area` TEXT NOT NULL, `rain` BOOLEAN NOT NULL, `valid_from` TEXT PRIMARY KEY NOT NULL, PRIMARY_KEY (`area`, `valid_from`))"])
+    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_readings_data` (`station_id` TEXT NOT NULL, `value` INTEGER NOT NULL, `timestamp` TEXT NOT NULL, PRIMARY_KEY (`station_id`, `timestamp`)))"])))
 
 (def default-opts {:return-keys true
                    :builder-fn rs/as-unqualified-maps})
@@ -126,3 +128,26 @@
                       (sql/query db query))
                     (catch Exception e (l/error e)))
                   (select-nea-rainfall-mistakes (repeat 1 timestamps)))))
+
+(defn select-nea-forecast-data
+  ([] (l/trace "Selecting NEA forecast generated data")
+      (try
+        (sql/query db ["SELECT * FROM `nea_weather_forecasts_data` WHERE 1 ORDER BY `valid_from`"])
+        (catch Exception e (l/error e))))
+  ([timestamps] (if (seq? timestamps)
+                  (try
+                    (let [sql-array (str/join "," (repeat (count timestamps) "?"))
+                          query (into [(str "SELECT * FROM `nea_weather_forecasts_data` WHERE `valid_from` IN (" sql-array ") ORDER BY `valid_from`")] timestamps)]
+                      (sql/query db query))
+                    (catch Exception e (l/error e)))
+                  (select-nea-forecast-data (repeat 1 timestamps)))))
+
+(defn insert-nea-forecast-data [{area :area
+                                 rain :rain
+                                 valid-from :valid-from}]
+  (l/trace "Inserting NEA forecast generated data" area rain valid-from)
+  (try
+    (sql/insert! db :nea_weather_forecasts_data {:area area
+                                                 :rain rain
+                                                 :valid_from valid-from})
+    (catch Exception e (l/error e))))

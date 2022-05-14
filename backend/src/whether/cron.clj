@@ -68,6 +68,14 @@
 (defn check-for-nea-mistakes
   ([timestamp] (check-for-nea-rainfall-mistakes timestamp)))
 
+(defn generate-nea-forecast-data
+  "populates nea_weather_forecasts_data based on raw data from nea_weather_forecasts"
+  [])
+
+(defn generate-nea-rainfall-data
+  "populates nea_rainfall_readings_data based on raw data from nea_rainfall_readings"
+  [])
+
 (defn update-nea-rainfall-readings
   ([] (update-nea-rainfall-readings (t/get-last-half-hour)))
   ([timestamp] (-> (db/select-nea-rainfall-readings timestamp)
@@ -112,11 +120,6 @@
                  (update-nea-realtime-readings timestamp))
                (t/get-5-min-range from-date to-date))))
 
-;; (defn update-nea-db-for-timestamp [timestamp]
-;;   ; to be run 'live'
-;;   (update-nea-forecasts timestamp)
-;;   (update-nea-realtime-readings-for-period timestamp (add-2h timestamp)))
-
 (defn update-nea-db-for-period [from-date to-date]
   ; to be run only for historical periods
   (l/debug "updating NEA DB for period" from-date to-date)
@@ -130,8 +133,4 @@
   (update-nea-realtime-readings-for-period from-date to-date)
   (l/debug "checking for NEA mistakes")
   (doseq [timestamp (t/get-30-min-range from-date to-date)]
-    (check-for-nea-mistakes timestamp))
-  ;; (doall (pmap
-  ;;         (fn [timestamp] (check-for-nea-mistakes timestamp))
-  ;;         (t/get-30-min-range from-date to-date)))
-  )
+    (check-for-nea-mistakes timestamp)))

@@ -60,8 +60,8 @@ body {
           padding: 0.6rem 1rem;
         }
         tr:nth-of-type(3) > td:first-of-type {
-          writing-mode: vertical-rl;
-          transform: rotate(180deg);
+          writing-mode: unset;
+          transform: rotate(-90deg);
         }
         tr:first-of-type > td:nth-of-type(3),
         tr:nth-of-type(3) > td:first-of-type, {

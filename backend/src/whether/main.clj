@@ -28,6 +28,8 @@
                          (t/get-last-30-days))
       "--cron-2" (apply whether-cron/update-nea-db-for-period
                         (t/get-last-n-days 2))
+      "--cron-last-x" (apply whether-cron/update-nea-db-for-period
+                             (t/get-last-n-days (Integer. (second args))))
       "--cron-x" (whether-cron/update-nea-db-for-period (nth args 1) (nth args 2))
       "--build" (generate-static-assets))
     (do

@@ -36,6 +36,16 @@ docker run -p 8000:8000 whether
 
 # Production
 
+To update data:
+
+```
+cd frontend
+npm run build
+
+cd backend
+lein trampoline run -m whether.main --cron-x 2022-09-11T00:00:00+08:00 2023-01-28T00:00:00+08:00
+```
+
 ```bash
 export IS_PRODUCTION=true
 lein trampoline run -m whether.main --build

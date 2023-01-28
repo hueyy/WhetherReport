@@ -12,7 +12,7 @@
    "City" "S108" ; Marina Gardens Drive
    "Jalan Bahar" "S44" ; Nanyang Avenue
    "Tengah" "S121" ; Old Choa Chu Kang Road
-   "Pulau Ubun" "S106" ; Pulau Ubin
+   "Pulau Ubin" "S106" ; Pulau Ubin
    "Novena" "S111" ; Scotts Road
    "Tuas" "S115" ; Tuas South Avenue 3
    "Changi" "S24" ; Upper Changi Road North

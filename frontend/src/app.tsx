@@ -1,4 +1,4 @@
-import type { Data, Region } from './types'
+import type { Data } from './types'
 import RegionsChart from './components/RegionsChart'
 import AccuracyChart from './components/AccuracyChart'
 
@@ -22,12 +22,6 @@ const {
   weekly_accuracy: weeklyAccuracy,
   rainfall_incidence: rainfallIncidence,
   forecasts_rain_count: forecastsRainCount,
-  confusion_matrix: [
-    rain_rain,
-    rain_non_rain,
-    non_rain_rain,
-    non_rain_non_rain,
-  ]
 } = data
 
 const regionArr = Object.entries(regions).sort(
@@ -63,32 +57,6 @@ const App = () => {
           This has affected the accuracy of MSS's predictions. Its predictions that the weather would be non-rainy are accurate <em>{round(accuracy.non_rain * 100)}%</em> of the time.
           However, where MSS predicted there would be rainy weather, it only actually rained <em>{round(accuracy.rain * 100)}%</em> of the time.
         </p>
-
-        <table className="confusion-matrix">
-          <tbody>
-            <tr>
-              <td rowSpan={2}></td>
-              <td></td>
-              <td colSpan={2}>Predicted</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>Rainy</td>
-              <td>Not Rainy</td>
-            </tr>
-            <tr>
-              <td rowSpan={2}>Actual</td>
-              <td>Rainy</td>
-              <td>{formatNumber(rain_rain)}</td>
-              <td>{formatNumber(rain_non_rain)}</td>
-            </tr>
-            <tr>
-              <td>Not Rainy</td>
-              <td>{formatNumber(non_rain_rain)}</td>
-              <td>{formatNumber(non_rain_non_rain)}</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
 
       <div className="accuracy-chart">

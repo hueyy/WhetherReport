@@ -126,10 +126,6 @@
                        (map #(add-accuracy-to-region % forecasts mistakes))
                        (reduce #(assoc %1 (first %2) (last %2)) {}))
          :weekly_accuracy weekly-accuracy
-         :confusion_matrix [(- forecasts-count mistakes-rain-count)
-                            mistakes-rain-count
-                            mistakes-no-rain-count
-                            (- forecasts-count mistakes-no-rain-count)]
          :forecasts_rain_count (calculate-forecasts-rain-count forecasts)
          :rainfall_incidence (calculate-rainfall-incidence)}
         (make-json))))

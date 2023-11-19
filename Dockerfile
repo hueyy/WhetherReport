@@ -1,7 +1,7 @@
 FROM node:lts-alpine3.14 AS frontend
 WORKDIR /app
 COPY ./frontend /app
-RUN npm ci && npm run build
+RUN npm i -g pnpm && pnpm install --prod --frozen-lockfile && pnpm run build
 
 FROM clojure:openjdk-18-lein-2.9.8-alpine AS build
 ENV PORT=80

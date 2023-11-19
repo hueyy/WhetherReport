@@ -7,7 +7,8 @@
             [whether.cron :as whether-cron]
             [whether.utils :refer [ignore-trailing-slash]]
             [whether.time :as t]
-            [whether.views :refer [generate-static-assets]])
+            [whether.views :refer [generate-static-assets]]
+            [whether.db :as db])
   (:gen-class))
 
 (def app
@@ -24,6 +25,7 @@
 (defn -main [& args]
   (if (seq args)
     (case (first args)
+      "--setup-db" (db/setup-db)
       "--cron-30" (apply whether-cron/update-nea-db-for-period
                          (t/get-last-30-days))
       "--cron-2" (apply whether-cron/update-nea-db-for-period

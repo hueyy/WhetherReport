@@ -126,6 +126,7 @@
   (l/debug "updating NEA forecasts")
   (doall (pmap
           (fn [timestamp]
+            (Thread/sleep 2000)
             (l/debug "updating NEA forecasts for timestamp" timestamp)
             (update-nea-forecasts timestamp))
           (t/get-30-min-range from-date to-date)))

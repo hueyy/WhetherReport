@@ -33,8 +33,8 @@
     (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_readings` (`raw_data` TEXT NOT NULL, `timestamp` TEXT PRIMARY KEY NOT NULL)"])
     ; generated data
     (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_mistakes` (`area` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `forecast` TEXT NOT NULL, `actual_rainfall` INTEGER NOT NULL, PRIMARY KEY (`area`, `timestamp`))"])
-    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_weather_forecasts_data` (`area` TEXT NOT NULL, `rain` BOOLEAN NOT NULL, `valid_from` TEXT PRIMARY KEY NOT NULL, PRIMARY_KEY (`area`, `valid_from`))"])
-    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_readings_data` (`station_id` TEXT NOT NULL, `value` INTEGER NOT NULL, `timestamp` TEXT NOT NULL, PRIMARY_KEY (`station_id`, `timestamp`)))"])))
+    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_weather_forecasts_data` (`area` TEXT NOT NULL, `rain` BOOLEAN NOT NULL, `valid_from` TEXT NOT NULL, PRIMARY KEY (`area`, `valid_from`))"])
+    (jdbc/execute! connection ["CREATE TABLE IF NOT EXISTS `nea_rainfall_readings_data` (`station_id` TEXT NOT NULL, `value` INTEGER NOT NULL, `timestamp` TEXT NOT NULL, PRIMARY KEY (`station_id`, `timestamp`))"])))
 
 (def default-opts {:return-keys true
                    :builder-fn rs/as-unqualified-maps})

@@ -9,6 +9,6 @@
 
 (def vite-url (env :vite-url "http://localhost:3001"))
 
-(def manifest-path (env :manifest-path "../frontend/dist/manifest.json"))
+(def manifest-path (env :manifest-path "../frontend/dist/.vite/manifest.json"))
 
 (def db-file (env :db-file "whether.sqlite"))

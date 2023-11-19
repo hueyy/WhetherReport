@@ -3,8 +3,8 @@
   :url "https://github.com/hueyy/whether-report"
   :min-lein-version "2.0.0"
   :license "AGPL-3.0"
-  :dependencies [[com.github.seancorfield/next.jdbc "1.3.847"]
-                 [com.taoensso/timbre "5.1.2"]
+  :dependencies [[com.github.seancorfield/next.jdbc "1.3.894"]
+                 [com.taoensso/timbre "6.3.1"]
                  [compojure "1.7.0"]
                  [environ "1.2.0"]
                  [hiccup "1.0.5"]
